@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "fit-diff"
+version = "0.1.0"
+description = "Fit file power difference analysis"
+authors = ["Arnaud Mallen <mallen.arnaud@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "fit_diff"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fitparse = "^1.2.0"
+pandas = "^2.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
