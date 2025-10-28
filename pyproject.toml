@@ -3,22 +3,22 @@ name = "fit-diff"
 version = "0.1.0"
 description = "Fit file power difference analysis"
 authors = [{ name = "Arnaud Mallen", email = "mallen.arnaud@gmail.com" }]
-requires-python = "~=3.11"
+requires-python = ">=3.11"
 readme = "README.md"
 license = "MIT"
 dependencies = [
-    "fitparse>=1.2.0,<2",
-    "pandas>=2.0.1,<3",
-    "matplotlib>=3.7.1,<4",
-    "plotly>=5.14.1,<6",
-    "statsmodels>=0.13.5,<0.14",
+    "fitparse>=1.2.0",
+    "matplotlib>=3.7.1",
+    "pandas>=2.0.1",
+    "plotly>=5.14.1",
+    "scipy>=1.10.0",
+    "statsmodels>=0.14.5",
 ]
 
-[dependency-groups]
-dev = [
-    "black>=23.3.0,<24",
-    "isort>=5.12.0,<6",
-]
+[tool.uv]
+# Never use system python
+python-preference = "only-managed"
+
 
 [tool.hatch.build.targets.sdist]
 include = ["fit_diff"]
@@ -26,6 +26,92 @@ include = ["fit_diff"]
 [tool.hatch.build.targets.wheel]
 include = ["fit_diff"]
 
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "pandas-stubs>=2.3.2.250926",
+    "pytest-cov>=7.0.0",
+    "pytest-xdist>=3.8.0",
+    "ruff>=0.14.2",
+]
+
+
+[tool.ruff]
+include = ["src/fit_diff/**/*.py"]
+namespace-packages = ["fit_diff"]
+
+lint.extend-select = ["ALL"]
+lint.ignore = [
+    "ANN205", # Don't annotate return type of staticmethods
+    "ANN401", # Allow Any type
+    "TC001",  # Don't force typing import block TODO(armallen): Remove this
+    "G004",   # Allow f-strings in logging calls
+    "D100",   # Allow missing module docstrings
+    "D101",   # Allow missing class docstrings
+    "D102",   # Allow missing method docstrings
+    "D103",   # Allow missing function docstrings
+    "D104",   # Allow missing docstrings in public package
+    "D105",   # Allow missing docstrings in magic methods
+    "D107",   # Allow missing __init__ docstrings
+    "D203",   # Conflict with D212
+    "D213",   # Conflict with D212
+    "S101",   # Allow asserts
+    "PGH003", # Allow type: ignore 
+    "FA102",  # Allow using PEP604 union X | Y without importing __future__.annotations
+    "TD003",  # Allow undocummented TODO links
+    "FIX002", # Allow documented TODOs
+    "FIX001", # Allow documented FIXMEs
+    "PD101",  # Allow uses of nunique
+    "TRY003", # Allow long messages in exceptions
+    "RUF012", # We are using pydantic, so we don't need to use TypeVar for class attributes
+    "PT011",  # Allow testing exceptions without matching exception string,
+    "INP001", # Allow missing __init__.py file in tests subdirs
+    "S607",   # Allow using partial path for commands in subprocess
+    "S603",   # Allow using shell=False check=True in subprocess
+    "S506",   # Allow unsafe yaml loader
+    "COM812", # Allow missing trailing commas, is fixed by formatter, see "Formatter compatibility" in https://docs.astral.sh/ruff/rules/missing-trailing-comma/#missing-trailing-comma-com812
+    # The following is also recommended by ruff, but it's not covered by the formatter,
+    # so we'll keep the rule active until we see a linter/formatter conflict
+    "ISC001", # Allow string concatenation on a single line, can cause conflicts with the formatter
+]
+lint.mccabe.max-complexity = 18
+lint.pylint.max-args = 6
+lint.pylint.max-branches = 20
+lint.pylint.max-statements = 80
+line-length = 120
+
+[tool.mypy]
+strict_optional = true
+strict_equality = true
+warn_return_any = true
+warn_unreachable = true
+check_untyped_defs = true
+exclude = ["tools/"]
+
+#[[tool.mypy.overrides]]
+#module = "fit_diff.*"
+#disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["matplotlib.*", "plotly.*", "scipy.*", "fitparse.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+log_cli = true
+
+
+[tool.pyright]
+# Avoids finding tens of thousands of files in workspace and crashing extensions
+exclude = ["third_party", ".ruff_cache", ".venv"]
+
+[tool.diff_cover]
+expand_coverage_report = false
+html_report = "diff_cover_report.html"
+show_uncovered = true
+fail_under = 80
