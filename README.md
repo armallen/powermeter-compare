@@ -24,7 +24,7 @@ cd powermeter-compare
 uv sync
 
 # Run the tool
-uv run python -m powermeter_compare.cli --help
+uv run powermeter-compare --help
 ```
 
 ## Quick Start
@@ -34,7 +34,7 @@ uv run python -m powermeter_compare.cli --help
 Compare two power meters using their FIT files:
 
 ```bash
-uv run python -m powermeter_compare.cli \
+uv run powermeter-compare \
   --ref-fit data/reference.fit \
   --candidate-fit data/candidate.fit
 ```
@@ -44,7 +44,7 @@ uv run python -m powermeter_compare.cli \
 Analyze offsets per workout interval using a MyWhoosh workout JSON:
 
 ```bash
-uv run python -m powermeter_compare.cli \
+uv run powermeter-compare \
   --ref-fit data/reference.fit \
   --candidate-fit data/candidate.fit \
   --workout-json data/workout.json \
@@ -56,7 +56,7 @@ uv run python -m powermeter_compare.cli \
 Override auto-detected power meter names:
 
 ```bash
-uv run python -m powermeter_compare.cli \
+uv run powermeter-compare \
   --ref-fit data/reference.fit \
   --candidate-fit data/candidate.fit \
   --label-ref "Quarq DZero" \
@@ -77,26 +77,34 @@ uv run python -m powermeter_compare.cli \
 ## Output Plots
 
 ### 1. Power Comparison Subplots
+
 Four synchronized subplots showing instantaneous, 5s, 10s, and 30s averaged power:
+
 - Reference power (blue) vs Candidate power (red)
 - Gray background indicates dropout regions
 - Colored backgrounds show workout intervals (if provided)
 - Each subplot annotated with offset statistics
 
 ### 2. Offset vs Target Power
+
 Scatter plot showing power offset at different target power levels:
+
 - Blue markers with error bars for each interval
 - Green dashed line shows RANSAC regression fit
 - Identifies systematic calibration errors
 
 ### 3. RANSAC Fit (Detailed)
+
 Enhanced offset vs power plot distinguishing:
+
 - Blue markers: Inlier intervals
 - Red X markers: Outlier intervals
 - Green dashed line: RANSAC fitted model
 
 ### 4. Cross-Correlation Diagnostics
+
 Shows correlation coefficient vs time lag:
+
 - Identifies optimal time offset
 - Visualizes alignment quality
 
@@ -118,15 +126,19 @@ Shows correlation coefficient vs time lag:
 ## Use Cases
 
 ### Validating a New Power Meter
+
 Compare a new power meter against a trusted reference to verify calibration and accuracy across different power levels.
 
 ### Detecting Calibration Drift
+
 Use RANSAC analysis to identify if offset varies with power (e.g., 2% error indicating systematic miscalibration).
 
 ### Interval Training Analysis
+
 Analyze per-interval offsets during structured workouts to understand power meter behavior at different intensities.
 
 ### Quality Assessment
+
 Identify dropout regions, data gaps, and anomalous intervals that may indicate connectivity or sensor issues.
 
 ## RANSAC Output Interpretation
@@ -157,22 +169,6 @@ make format-lint
 uv run powermeter-compare --ref-fit data/MyWhoosh.fit --candidate-fit data/Favero.fit --workout-json data/MyWhooshWorkout.json --ftp 320
 ```
 
-## Project Structure
-
-```
-powermeter-compare/
- src/powermeter_compare/
-   alignment.py         # Time alignment and offset computation
-   cli.py              # Command-line interface
-   fit_io.py           # FIT file reading and parsing
-   plotting.py         # Plotly visualizations
-   power_comparison.py # Main analysis pipeline
-   workout.py          # Workout interval parsing
- tests/                  # Unit tests (57 tests)
- Makefile               # Development tasks
- pyproject.toml         # Project configuration
-```
-
 ## License
 
 MIT
@@ -180,6 +176,7 @@ MIT
 ## Contributing
 
 Contributions welcome! Please ensure:
+
 - All tests pass: `make tests`
 - Code is formatted: `make format-lint`
 - New features include tests
