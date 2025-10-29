@@ -1,7 +1,7 @@
 [project]
-name = "fit-diff"
+name = "powermeter-compare"
 version = "0.1.0"
-description = "Fit file power difference analysis"
+description = "Power meter comparison and analysis tool for cycling"
 authors = [{ name = "Arnaud Mallen", email = "mallen.arnaud@gmail.com" }]
 requires-python = ">=3.11"
 readme = "README.md"
@@ -11,20 +11,26 @@ dependencies = [
     "matplotlib>=3.7.1",
     "pandas>=2.0.1",
     "plotly>=5.14.1",
+    "scikit-learn>=1.3.0",
     "scipy>=1.10.0",
     "statsmodels>=0.14.5",
 ]
+
+[project.scripts]
+"powermeter-compare" = "powermeter_compare.cli:main"
 
 [tool.uv]
 # Never use system python
 python-preference = "only-managed"
 
-
 [tool.hatch.build.targets.sdist]
-include = ["fit_diff"]
+include = ["powermeter_compare"]
 
 [tool.hatch.build.targets.wheel]
-include = ["fit_diff"]
+include = ["powermeter_compare"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/powermeter_compare" = "powermeter_compare"
 
 
 [build-system]
@@ -42,8 +48,8 @@ dev = [
 
 
 [tool.ruff]
-include = ["src/fit_diff/**/*.py"]
-namespace-packages = ["fit_diff"]
+include = ["src/powermeter_compare/**/*.py"]
+namespace-packages = ["powermeter_compare"]
 
 lint.extend-select = ["ALL"]
 lint.ignore = [
@@ -80,7 +86,7 @@ lint.ignore = [
     "ISC001", # Allow string concatenation on a single line, can cause conflicts with the formatter
 ]
 lint.mccabe.max-complexity = 18
-lint.pylint.max-args = 6
+lint.pylint.max-args = 8
 lint.pylint.max-branches = 20
 lint.pylint.max-statements = 80
 line-length = 120
@@ -93,12 +99,8 @@ warn_unreachable = true
 check_untyped_defs = true
 exclude = ["tools/"]
 
-#[[tool.mypy.overrides]]
-#module = "fit_diff.*"
-#disallow_untyped_defs = true
-
 [[tool.mypy.overrides]]
-module = ["matplotlib.*", "plotly.*", "scipy.*", "fitparse.*"]
+module = ["matplotlib.*", "plotly.*", "scipy.*", "fitparse.*", "sklearn.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
