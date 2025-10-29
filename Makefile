@@ -29,7 +29,7 @@ install:
 	uv sync
 
 test-coverage tests-coverage:
-	MYPYPATH=src $(RUN) pytest --cov=condor --cov-branch --cov-report xml:coverage.xml --cov-report html:htmlcov -n 4 --junitxml=test-results.xml $(TESTS_PATTERN) --ignore=tests/local -vvv -o log_cli_level=CRITICAL --durations=40
+	MYPYPATH=src $(RUN) pytest --cov=powermeter_compare --cov-branch --cov-report xml:coverage.xml --cov-report html:htmlcov -n 4 --junitxml=test-results.xml $(TESTS_PATTERN) --ignore=tests/local -vvv -o log_cli_level=CRITICAL --durations=40
 
 diff-coverage:
 	$(RUN) diff-cover -c pyproject.toml coverage.xml
